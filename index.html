@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Burger - كوست بركر</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Baloo Bhaijaan 2', 'Fredoka', sans-serif;
+            background-color: #FFFFFF;
+            color: #1C1B1F;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .m3-card {
+            border-radius: 28px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .m3-card:active { transform: scale(0.96); }
+        .hidden { display: none !important; }
+        ::-webkit-scrollbar { width: 0px; }
+        
+        @keyframes slide-up {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center px-6 py-10">
+
+    <!-- Expiration Overlay -->
+    <div id="expiration-overlay" class="fixed inset-0 hidden flex flex-col items-center justify-center p-8 text-center bg-white z-[9999]">
+        <div class="bg-red-50 p-10 rounded-[48px] border border-red-100 flex flex-col items-center max-w-sm shadow-2xl">
+            <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6">
+                <i data-lucide="alert-circle" size="56"></i>
+            </div>
+            <h2 class="text-3xl font-black text-[#1C1B1F] mb-4">انتهى اشتراك الصفحة</h2>
+            <p class="text-[#49454F] mb-8 leading-relaxed">عذراً، انتهت صلاحية هذه الصفحة. يرجى التواصل مع LanLink لتجديد الاشتراك.</p>
+            <a id="whatsapp-renewal-link" href="#" class="w-full flex items-center justify-center gap-3 py-5 bg-black text-white rounded-[24px] font-black shadow-xl active:scale-95 transition-all">
+                <i data-lucide="message-circle" size="24"></i>
+                <span>تواصل معنا لتجديد الاشتراك</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="w-full max-w-sm flex flex-col items-center">
+        
+        <!-- Language Selector -->
+        <div class="w-full flex justify-center p-1.5 bg-[#F4F4F4] rounded-full mb-12 border border-black/5">
+            <button onclick="setLanguage('ar')" id="btn-ar" class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all bg-black text-white shadow-md">عربي</button>
+            <button onclick="setLanguage('fa')" id="btn-fa" class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all text-[#49454F]">فارسی</button>
+            <button onclick="setLanguage('en')" id="btn-en" class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all text-[#49454F]">EN</button>
+        </div>
+
+        <!-- Header -->
+        <header class="flex flex-col items-center text-center mb-10">
+            <div class="relative w-32 h-32 bg-black rounded-[40px] shadow-2xl flex items-center justify-center overflow-hidden border-4 border-red-600">
+                <img src="https://cdn.jsdelivr.net/gh/my-land/cost-burger@main/cb-logo.jpg" alt="Cost Burger Logo" class="w-full h-full object-cover">
+            </div>
+            <h1 class="text-4xl font-black mt-8 text-black uppercase tracking-tight" id="txt-title">كوست بركر</h1>
+            <div class="mt-3 px-5 py-2 bg-red-600 text-white rounded-full text-sm font-bold flex items-center gap-2">
+                <i data-lucide="map-pin" size="14"></i>
+                <span id="txt-location">النجف - شارع الزهور</span>
+            </div>
+            <p class="mt-6 text-[#49454F] text-lg font-medium leading-relaxed" id="txt-subtitle">أطيب بركر بالنجف.. طعم لا يُنسى 🍔</p>
+        </header>
+
+        <!-- Actions -->
+        <div class="w-full flex flex-col gap-4">
+            
+            <!-- Menu Button -->
+            <div onclick="toggleMenu(true)" class="m3-card bg-black text-white p-6 shadow-xl flex items-center justify-between group border-2 border-transparent hover:border-red-600">
+                <div class="flex items-center gap-4">
+                    <div class="bg-red-600 p-3 rounded-2xl group-active:scale-90 transition-transform">
+                        <i data-lucide="book-open" size="32"></i>
+                    </div>
+                    <span class="text-2xl font-black" id="btn-menu-txt">تصفح القائمة</span>
+                </div>
+                <i class="icon-dir" data-lucide="chevron-left" size="28"></i>
+            </div>
+
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/cost.burger" target="_blank" class="m3-card bg-white border-2 border-[#F4F4F4] p-6 shadow-sm flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-2xl bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white">
+                        <i data-lucide="instagram" size="24"></i>
+                    </div>
+                    <span class="text-xl font-bold" id="btn-insta-txt">إنستقرام</span>
+                </div>
+                <i class="icon-dir opacity-30" data-lucide="chevron-left" size="24"></i>
+            </a>
+
+            <!-- Call Section -->
+            <div class="m3-card bg-white border-2 border-[#F4F4F4] p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-5 text-red-600">
+                    <i data-lucide="truck" size="24"></i>
+                    <span class="text-lg font-bold uppercase tracking-wide" id="txt-delivery">التوصيل</span>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <a href="tel:07803000433" class="flex items-center justify-between p-4 bg-[#FDF2F2] rounded-2xl text-2xl font-black text-black active:bg-red-100 transition-colors">
+                        <span class="font-mono">07803000433</span>
+                        <i data-lucide="phone-call" size="20"></i>
+                    </a>
+                    <a href="tel:07734000433" class="flex items-center justify-between p-4 bg-[#FDF2F2] rounded-2xl text-2xl font-black text-black active:bg-red-100 transition-colors">
+                        <span class="font-mono">07734000433</span>
+                        <i data-lucide="phone-call" size="20"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Address Card -->
+            <div class="m3-card bg-white border-2 border-[#F4F4F4] p-5 flex items-center gap-5">
+                <div class="bg-black p-4 rounded-2xl text-white"><i data-lucide="navigation" size="24"></i></div>
+                <div class="flex-1">
+                    <span class="block text-xs font-bold text-[#49454F] uppercase opacity-60" id="txt-addr-label">العنوان</span>
+                    <span class="font-bold text-sm leading-tight" id="txt-full-addr">النجف شارع الزهور ركن مجمع سلطانة</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 flex flex-col items-center gap-4 text-center pb-10">
+            <div class="text-[#49454F] text-sm font-bold flex items-center gap-2">
+                 <span>Cost Burger</span>
+                 <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+                 <span>2026</span>
+            </div>
+            <a href="https://my-land.github.io/lanlink/" target="_blank" class="group flex flex-col items-center gap-1">
+                <div class="text-[10px] text-[#49454F] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100" id="txt-lanlink-promo">تريد صفحة مثل هذه؟ اطلبها من LanLink</div>
+                <div class="text-xs font-black text-red-600 border-b-2 border-red-600/20 pb-0.5" id="txt-copy">جميع الحقوق محفوظة © LanLink</div>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Menu Modal -->
+    <div id="menu-modal" class="fixed inset-0 z-[100] hidden flex flex-col items-center justify-end bg-black/60 backdrop-blur-sm">
+        <div class="absolute inset-0" onclick="toggleMenu(false)"></div>
+        <div class="relative w-full max-w-lg h-[90vh] bg-white rounded-t-[48px] shadow-2xl overflow-hidden flex flex-col animate-slide-up">
+            <div class="sticky top-0 z-20 bg-white/90 backdrop-blur-md px-8 py-6 border-b flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-black text-black" id="modal-menu-title">القائمة</h2>
+                    <span class="text-xs font-bold text-red-600 tracking-widest uppercase">Cost Burger</span>
+                </div>
+                <button onclick="toggleMenu(false)" class="p-3 bg-[#F4F4F4] rounded-full text-black active:scale-90 transition-transform"><i data-lucide="x" size="24"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto px-8 py-6 space-y-10 pb-32" id="menu-content"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
+                <a href="tel:07803000433" class="w-full flex items-center justify-center gap-3 py-4 bg-red-600 text-white rounded-2xl font-black shadow-lg active:scale-95 transition-all">
+                    <i data-lucide="phone" size="20"></i><span id="modal-call-btn">اطلب الآن</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EXPIRATION_DATE = new Date('2026-02-28T23:59:59');
+        const SUPPORT_WHATSAPP = "989358185552";
+
+        const TRANSLATIONS = {
+            ar: {
+                title: "كوست بركر", subtitle: "أطيب بركر بالنجف.. طعم لا يُنسى 🍔", location: "النجف - شارع الزهور",
+                menu: "تصفح القائمة", insta: "إنستقرام", delivery: "التوصيل", addressLabel: "العنوان",
+                address: "النجف شارع الزهور ركن مجمع سلطانة", lanlink: "تريد صفحة مثل هذه؟ اطلبها من LanLink",
+                copy: "جميع الحقوق محفوظة © LanLink", callNow: "اطلب الآن", currency: "د.ع", dir: "rtl",
+                cats: { burger: "البركر", crispy: "دجاج مقرمش", kass: "القص" }
+            },
+            fa: {
+                title: "کاست برگر", subtitle: "بهترین برگر در نجف.. طعمی که فراموش نمی‌کنید 🍔", location: "نجف - خیابان الزهور",
+                menu: "مشاهده منو", insta: "اینستاگرام", delivery: "ارسال", addressLabel: "آدرس",
+                address: "نجف، خیابان الزهور، جنب مجتمع سلطانه", lanlink: "صفحه اختصاصی می‌خواهید؟ از LanLink سفارش دهید",
+                copy: "تمامی حقوق محفوظ است © LanLink", callNow: "سفارش دهید", currency: "دینار", dir: "rtl",
+                cats: { burger: "برگر", crispy: "مرغ سوخاری", kass: "کباب ترکی" }
+            },
+            en: {
+                title: "Cost Burger", subtitle: "Best Burger in Najaf.. A taste you won't forget 🍔", location: "Najaf - Al-Zuhour St",
+                menu: "View Menu", insta: "Instagram", delivery: "Delivery", addressLabel: "Location",
+                address: "Najaf, Al-Zuhour St, Corner of Sultana Complex", lanlink: "Want a page like this? Order on LanLink",
+                copy: "Copyright © LanLink", callNow: "Order Now", currency: "IQD", dir: "ltr",
+                cats: { burger: "Burgers", crispy: "Crispy Chicken", kass: "Shawarma / Kass" }
+            }
+        };
+
+        const MENU_DATA = {
+            burger: [
+                { ar: "تشيز بركر", en: "Cheeseburger", price: "6,000" },
+                { ar: "دايمون بركر", en: "Diamond Burger", price: "8,000" },
+                { ar: "ماك بركر", en: "Mac Burger", price: "7,000" },
+                { ar: "سبيشيال بركر", en: "Special Burger", price: "7,000" },
+                { ar: "ساوا بركر", en: "Sawa Burger", price: "12,000" },
+                { ar: "هيرو بركر", en: "Hero Burger", price: "9,000" },
+                { ar: "كوست بركر", en: "Cost Burger", price: "10,000" },
+                { ar: "بغداد بركر", en: "Baghdad Burger", price: "9,000" },
+                { ar: "دولار بركر", en: "Dollar Burger", price: "5,000" },
+                { ar: "كلاسيك بركر", en: "Classic Burger", price: "5,500" },
+                { ar: "داينمت بركر", en: "Dynamite Burger", price: "8,000" },
+                { ar: "مشروم ستيك", en: "Mushroom Steak", price: "7,000" },
+                { ar: "باربيكيو بركر", en: "Barbecue Burger", price: "7,000" },
+                { ar: "تشكن بركر", en: "Chicken Burger", price: "5,000" }
+            ],
+            crispy: [
+                { ar: "سندويش كريسبي", en: "Crispy Sandwich", price: "5,000" },
+                { ar: "سندويش زنجر", en: "Zinger Sandwich", price: "5,000" },
+                { ar: "وجبة كريسبي", en: "Crispy Meal", price: "5,000" },
+                { ar: "ريزو اورجنال", en: "Original Rizzo", price: "5,000" },
+                { ar: "ريزو باربيكيو", en: "Barbecue Rizzo", price: "6,000" },
+                { ar: "ريزو بالجبن", en: "Cheese Rizzo", price: "6,000" },
+                { ar: "كنتاكي 3 قطع", en: "Kentucky 3 Pieces", price: "8,000" },
+                { ar: "قطعة كنتاكي", en: "Kentucky Piece", price: "6,000" },
+                { ar: "كيلو كنتاكي", en: "Kentucky Kilo", price: "16,000" }
+            ],
+            kass: [
+                { ar: "ريزو كص لحم", en: "Beef Shawarma Rizzo", price: "7,000" },
+                { ar: "ريزو كص دجاج", en: "Chicken Shawarma Rizzo", price: "6,000" },
+                { ar: "صاج شاورما لحم", en: "Beef Shawarma Saj", price: "3,500" },
+                { ar: "صاج شاورما دجاج", en: "Chicken Shawarma Saj", price: "3,000" },
+                { ar: "سندويش شاورما لحم", en: "Beef Shawarma Sandwich", price: "3,000" },
+                { ar: "سندويش شاورما دجاج", en: "Chicken Shawarma Sandwich", price: "2,500" },
+                { ar: "كيلو شاورما لحم", en: "Beef Shawarma Kilo", price: "28,000" },
+                { ar: "كيلو شاورما دجاج", en: "Chicken Shawarma Kilo", price: "22,000" },
+                { ar: "طبق عربي", en: "Arabic Plate", price: "4,000" }
+            ]
+        };
+
+        let currentLang = 'ar';
+
+        function checkSubscription() {
+            if (new Date() > EXPIRATION_DATE) {
+                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('expiration-overlay').classList.remove('hidden');
+                document.getElementById('whatsapp-renewal-link').href = `https://wa.me/${SUPPORT_WHATSAPP}`;
+                return true;
+            }
+            return false;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = TRANSLATIONS[lang];
+            document.documentElement.dir = t.dir;
+            document.documentElement.lang = lang;
+
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('txt-location').innerText = t.location;
+            document.getElementById('btn-menu-txt').innerText = t.menu;
+            document.getElementById('btn-insta-txt').innerText = t.insta;
+            document.getElementById('txt-delivery').innerText = t.delivery;
+            document.getElementById('txt-addr-label').innerText = t.addressLabel;
+            document.getElementById('txt-full-addr').innerText = t.address;
+            document.getElementById('txt-lanlink-promo').innerText = t.lanlink;
+            document.getElementById('txt-copy').innerText = t.copy;
+            document.getElementById('modal-menu-title').innerText = t.menu;
+            document.getElementById('modal-call-btn').innerText = t.callNow;
+
+            const icons = document.querySelectorAll('.icon-dir');
+            icons.forEach(i => i.setAttribute('data-lucide', t.dir === 'rtl' ? 'chevron-left' : 'chevron-right'));
+
+            ['ar', 'fa', 'en'].forEach(l => {
+                const b = document.getElementById(`btn-${l}`);
+                if (l === lang) { b.classList.add('bg-black', 'text-white', 'shadow-md'); b.classList.remove('text-[#49454F]'); }
+                else { b.classList.remove('bg-black', 'text-white', 'shadow-md'); b.classList.add('text-[#49454F]'); }
+            });
+
+            renderMenu();
+            lucide.createIcons();
+        }
+
+        function toggleMenu(isOpen) {
+            const m = document.getElementById('menu-modal');
+            m.classList.toggle('hidden', !isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-content');
+            const t = TRANSLATIONS[currentLang];
+            let html = '';
+            for (const [key, items] of Object.entries(MENU_DATA)) {
+                html += `<div>
+                    <h3 class="text-xl font-black text-red-600 mb-5 border-r-4 pr-3 rtl:border-r-4 rtl:pl-0 ltr:border-l-4 ltr:pl-3 ltr:border-r-0">
+                        ${t.cats[key]}
+                    </h3>
+                    <div class="space-y-3">
+                        ${items.map(i => `
+                            <div class="bg-[#F8F8F8] p-4 rounded-2xl flex justify-between items-center">
+                                <span class="font-bold text-black">${currentLang === 'en' ? i.en : i.ar}</span>
+                                <span class="font-black text-red-600">${i.price} <small class="text-[10px] uppercase opacity-50">${t.currency}</small></span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        if (!checkSubscription()) setLanguage('ar');
+        else lucide.createIcons();
+    </script>
+</body>
+</html>
